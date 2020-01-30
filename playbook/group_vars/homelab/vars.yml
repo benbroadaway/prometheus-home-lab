@@ -1,0 +1,21 @@
+home_dir: "/home/ben"
+# where to store grafana and prometheus data
+base_data_dir: "{{ home_dir }}/metrics"
+
+
+# concord hosts
+metricsHosts:
+  concord:
+    server:
+      - "ben-nuc7:8001" # concord metrics
+    db:
+      - "ben-nuc7:9187" # postgres node exporter
+  nodes:
+    - "ben-nuc7:9100" # prometheus node exporter
+    - "ben-nuc8:9100"
+
+
+## in the vault
+# ansible_user:
+# ansible_become_user:
+# ansible_become_password:

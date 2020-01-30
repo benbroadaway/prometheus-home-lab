@@ -1,0 +1,20 @@
+homelab:
+  children:
+    server_primary:
+      hosts:
+        ben-nuc7:
+    db_primary:
+      hosts:
+        ben-nuc7:
+    server:
+      children:
+        server_primary:
+    agent:
+      hosts:
+        ben-nuc7:
+    proxy:
+      hosts:
+        ben-nuc7:
+    metrics:
+      hosts:
+        ben-nuc7:

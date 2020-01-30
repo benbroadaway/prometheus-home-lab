@@ -1,0 +1,7 @@
+---
+
+- hosts: metrics
+  roles:
+  - role: prereqs
+  - role: prometheus
+  - role: grafana

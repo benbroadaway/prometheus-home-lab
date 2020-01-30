@@ -1,0 +1,30 @@
+- name: Create required directories
+  file:
+    path: "{{ base_data_dir }}/{{ item }}"
+    state: directory
+    mode: 0777
+  loop:
+    - "cfg"
+    - "data/prometheus"
+
+- name: Copy config
+  template:
+    src: prometheus.yml
+    dest: "{{ base_data_dir }}/cfg/prometheus.yml"
+
+- name: Create Prometheus container
+  become: true
+  docker_container:
+    image: prom/prometheus
+    name: prometheus
+    network_mode: host
+    pull: true
+    restart_policy: unless-stopped
+    state: started
+    volumes:
+      - "{{ base_data_dir }}/cfg/prometheus.yml:/etc/prometheus/prometheus.yml:ro"
+      - "{{ base_data_dir }}/data/prometheus:/prometheus:rw"
+    command: [
+      "--config.file=/etc/prometheus/prometheus.yml",
+      "--storage.tsdb.path=/prometheus"
+    ]

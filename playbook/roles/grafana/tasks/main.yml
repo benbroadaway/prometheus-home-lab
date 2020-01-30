@@ -1,0 +1,22 @@
+---
+
+- name: Create required directories
+  file:
+    path: "{{ base_data_dir }}/{{ item }}"
+    state: directory
+    mode: 0777
+  loop:
+    - "cfg"
+    - "data/grafana"
+
+- name: Create grafana container
+  become: true
+  docker_container:
+    image: grafana/grafana
+    name: grafana
+    network_mode: host
+    pull: true
+    restart_policy: unless-stopped
+    state: started
+    volumes:
+    - "{{ base_data_dir }}/data/grafana:/var/lib/grafana"
