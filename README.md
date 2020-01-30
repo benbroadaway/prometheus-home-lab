@@ -10,7 +10,8 @@ a home lab. There's support for scraping [Concord](https://concord.walmartlabs.c
 Update the inventory and vars (and vault) for whatever.
 
 - `inventories/homelab.yml` - ansible inventory of hosts to monitor
-- `playbook/group_vars/vars.yml` - Variables for the playbook, including ssh connection settings
+- `playbook/group_vars/homelab/vars.yml` - Non-sensitive variables for the playbook
+- `playbook/group_vars/homelab/vault.yml` - Sensitive variables, including ssh connection settings.
 
 ## Run it
 
