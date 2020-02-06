@@ -8,6 +8,33 @@
   loop:
     - "cfg"
     - "data/grafana"
+    - "cfg/certs"
+
+- name: Generate private key
+  openssl_privatekey:
+    path: "{{ base_data_dir }}/cfg/certs/grafana-https-key.pem"
+    type: RSA
+    size: 4096 
+
+- name: Generate an OpenSSL CSR.
+  openssl_csr:
+    path: "{{ base_data_dir }}/cfg/certs/grafana-https.csr"
+    privatekey_path: "{{ base_data_dir }}/cfg/certs/grafana-https-key.pem"
+    common_name: "{{ grafana_cert.common_name }}"
+    subject_alt_name: "{{ grafana_cert.subject_alt_name }}"
+    key_usage: digitalSignature
+    extended_key_usage: serverAuth
+
+- name: Generate a Self Signed certificate.
+  openssl_certificate:
+    path: "{{ base_data_dir }}/cfg/certs/grafana-https-chain.pem"
+    privatekey_path:  "{{ base_data_dir }}/cfg/certs/grafana-https-key.pem"
+    csr_path: "{{ base_data_dir }}/cfg/certs/grafana-https.csr"
+    selfsigned_not_after: '+365d'
+    provider: selfsigned
+
+- name: convert key to pkcs8
+  shell: openssl pkcs8 -topk8 -nocrypt -in "{{ base_data_dir }}/cfg/certs/grafana-https-key.pem" -out "{{ base_data_dir }}/cfg/certs/grafana-https-key.pkcs8"
 
 - name: Create grafana container
   become: true
@@ -18,5 +45,11 @@
     pull: true
     restart_policy: unless-stopped
     state: started
+    user: 1000
+    env:
+      GF_SERVER_PROTOCOL: 'https'
+      GF_SERVER_CERT_FILE: '/certs/grafana-https-chain.pem'
+      GF_SERVER_CERT_KEY: '/certs/grafana-https-key.pkcs8'
     volumes:
     - "{{ base_data_dir }}/data/grafana:/var/lib/grafana"
+    - "{{ base_data_dir }}/cfg/certs:/certs:ro"

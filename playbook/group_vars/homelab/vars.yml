@@ -19,3 +19,8 @@ metricsHosts:
 # ansible_user:
 # ansible_become_user:
 # ansible_become_password:
+
+# grafana_cert:
+#   common_name:
+#   subject_alt_name:
+  
