@@ -18,3 +18,6 @@ homelab:
     metrics:
       hosts:
         ben-nuc7:
+    monitor_only:
+      hosts:
+        b2broad-fedora-lan.lan:

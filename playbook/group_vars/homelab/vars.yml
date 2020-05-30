@@ -13,6 +13,7 @@ metricsHosts:
   nodes:
     - "ben-nuc7:9100" # prometheus node exporter
     - "ben-nuc8:9100"
+    - "b2broad-fedora.lan:9100"
 
 
 ## in the vault
